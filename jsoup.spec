@@ -1,9 +1,9 @@
 %{?_javapackages_macros:%_javapackages_macros}
 Name:           jsoup
 Version:        1.7.2
-Release:        1.1%{?dist}
+Release:        4.1
 Summary:        Java library for working with real-world HTML
-
+Group:		Development/Java
 
 License:        MIT
 
@@ -14,17 +14,10 @@ Source0:        jsoup-jsoup-1.7.2.tar.gz
 
 BuildArch: noarch
 
-BuildRequires: java-devel >= 1:1.6.0
 BuildRequires: maven-local
-BuildRequires: maven-compiler-plugin
-BuildRequires: maven-source-plugin
-BuildRequires: maven-javadoc-plugin
-BuildRequires: maven-plugin-plugin
-BuildRequires: maven-jar-plugin
-BuildRequires: maven-surefire-provider-junit4
-BuildRequires: maven-install-plugin
-Requires: jpackage-utils
-Requires: java
+BuildRequires: mvn(junit:junit)
+BuildRequires: mvn(org.apache.felix:maven-bundle-plugin)
+BuildRequires: mvn(org.apache.maven.plugins:maven-source-plugin)
 
 
 %description
@@ -48,9 +41,7 @@ jsoup will create a sensible parse tree.
 
 
 %package javadoc
-
 Summary:        Javadoc for %{name}
-Requires: jpackage-utils
 
 %description javadoc
 API documentation for %{name}.
@@ -59,30 +50,16 @@ API documentation for %{name}.
 %setup -q -n jsoup-jsoup-%{version}
 
 %build
-mvn-rpmbuild install javadoc:aggregate
+%mvn_build
 
 %install
-# jars
-install -Dpm 644 target/%{name}-%{version}.jar %{buildroot}%{_javadir}/%{name}.jar
+%mvn_install
 
-# poms
-install -Dpm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
-
-%add_maven_depmap JPP-%{name}.pom %{name}.jar
-
-# javadoc
-install -dm 755 %{buildroot}%{_javadocdir}/%{name}
-cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
-
-%files
+%files -f .mfiles
 %doc LICENSE README CHANGES
-%{_javadir}/%{name}.jar
-%{_mavenpomdir}/JPP-%{name}.pom
-%{_mavendepmapfragdir}/%{name}
 
-%files javadoc
+%files javadoc -f .mfiles-javadoc
 %doc LICENSE
-%doc %{_javadocdir}/%{name}
 
 %changelog
 * Mon Aug 12 2013 Alexander Kurtakov <akurtako@redhat.com> 1.7.2-1
