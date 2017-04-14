@@ -1,24 +1,19 @@
 %{?_javapackages_macros:%_javapackages_macros}
 Name:           jsoup
-Version:        1.7.2
-Release:        4.2
+Version:        1.10.2
+Release:        2%{?dist}
 Summary:        Java library for working with real-world HTML
-Group:		Development/Java
-
 License:        MIT
+URL:            http://jsoup.org/
+BuildArch:      noarch
 
-URL:            http://%{name}.org/
+Source0:        https://github.com/jhy/%{name}/archive/%{name}-%{version}.tar.gz
 
-# https://github.com/jhy/jsoup/archive/jsoup-1.7.2.tar.gz
-Source0:        jsoup-jsoup-1.7.2.tar.gz
-
-BuildArch: noarch
-
-BuildRequires: maven-local
-BuildRequires: mvn(junit:junit)
-BuildRequires: mvn(org.apache.felix:maven-bundle-plugin)
-BuildRequires: mvn(org.apache.maven.plugins:maven-source-plugin)
-
+BuildRequires:  maven-local
+BuildRequires:  mvn(com.google.code.gson:gson)
+BuildRequires:  mvn(junit:junit)
+BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-source-plugin)
 
 %description
 jsoup is a Java library for working with real-world HTML.
@@ -47,7 +42,10 @@ Summary:        Javadoc for %{name}
 API documentation for %{name}.
 
 %prep
-%setup -q -n jsoup-jsoup-%{version}
+%setup -q -n %{name}-%{name}-%{version}
+
+%pom_remove_plugin :animal-sniffer-maven-plugin
+%pom_remove_plugin :maven-javadoc-plugin
 
 %build
 %mvn_build
@@ -56,12 +54,52 @@ API documentation for %{name}.
 %mvn_install
 
 %files -f .mfiles
-%doc LICENSE README CHANGES
+%doc README CHANGES
+%doc LICENSE
 
 %files javadoc -f .mfiles-javadoc
 %doc LICENSE
 
 %changelog
+* Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.10.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
+* Wed Jan 04 2017 Michael Simacek <msimacek@redhat.com> - 1.10.2-1
+- Update to upstream version 1.10.2
+
+* Wed Nov 02 2016 Michael Simacek <msimacek@redhat.com> - 1.10.1-1
+- Update to upstream version 1.10.1
+
+* Tue May 24 2016 Michael Simacek <msimacek@redhat.com> - 1.9.2-1
+- Update to upstream version 1.9.2
+
+* Mon Apr 18 2016 Michael Simacek <msimacek@redhat.com> - 1.9.1-1
+- Update to upstream version 1.9.1
+
+* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.8.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
+* Tue Aug 04 2015 Michael Simacek <msimacek@redhat.com> - 1.8.3-1
+- Update to upstream version 1.8.3
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue Apr 14 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.8.2-1
+- Update to upstream version 1.8.2
+
+* Mon Sep 29 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.8.1-1
+- Update to upstream version 1.8.1
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 21 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.7.2-3
+- Update to current packaging guidelines
+
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.7.2-2
+- Use Requires: java-headless rebuild (#1067528)
+
 * Mon Aug 12 2013 Alexander Kurtakov <akurtako@redhat.com> 1.7.2-1
 - Update to latest upstream.
 
@@ -89,3 +127,4 @@ API documentation for %{name}.
 
 * Fri Jul 22 2011 Jaromir Capik <jcapik@redhat.com> - 1.6.1-1
 - Initial package
+
